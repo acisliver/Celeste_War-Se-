@@ -133,8 +133,6 @@ class Screen:
         self.player.arrows=[]
         self.player.sectors=[]
         self.abadguys=[]
-        self.rxX= 50
-        self.alpha= 255
         msg=se.recv_msg
         scwhat=what
         self.timer.timer()
@@ -196,14 +194,13 @@ class Screen:
                         self.collider.backup.remove(Bu)
                 if self.player.left <= 740:
                     self.playercheck = True
-
                 if self.playercheck == False:
                     self.player.left -= 2
                 elif self.playercheck == True and 800 > self.player.left:
                     self.player.left += 1
-
             else :
                 self.player.Start = False
+
                 self.timer.printf()  # 타이머 그리기
                 self.collider.collide()  # 충돌 함수
                 self.player.collidercheck=self.collider.playercheck
@@ -268,6 +265,7 @@ class Screen:
         while True:
             se.sendStatus([0])
             self.screen2.Start(se)#스크린2 실행
+            game = Screen()
             game.Start(se,self.screen2.what)#스크린1 실행
 
 
