@@ -22,6 +22,10 @@ class Abadguy(pygame.Rect):
         self.num = num
         self.round=round
         self.bullets = []
+        if self.time/2==0:
+            self.wallCollX="Left"
+        else:
+            self.wallCollX="Right"
     def startmove(self, sinx):
         rotated = pygame.transform.rotate(self.abadguy, sinx)
         rect = rotated.get_rect()
