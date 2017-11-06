@@ -12,6 +12,8 @@ from Screen2 import Screen2
 from Menu import Menu
 from Server import Server
 from Bullet import Bullet
+
+
 class Screen:
     width=700
     height =900
@@ -30,6 +32,8 @@ class Screen:
     exitcode = 0
     count=67
     one_count=0
+
+
     tcheck=False
     acheck=False
     tmax=0
@@ -39,9 +43,11 @@ class Screen:
     bY=0
     bYplus=10
     num=0
+    healgauge = 100
     collidercheck=False
     playercheck=False
     startcheck=True
+    regame=False
 
     background = pygame.image.load('resources/images/background.png')
     gameover = pygame.image.load("resources/images/gameover.png")
@@ -58,11 +64,11 @@ class Screen:
     screen = pygame.display.set_mode((width, height))       #화면 해상도
     bg_columns = background.get_width()                     #화면 너비 불러오기
     bg_rows = background.get_height()                       #화면 높이 불러오기
-    pygame.display.set_caption("서버")
+    pygame.display.set_caption("Celeste_War")
 
-    def __init__(self):
+    def __init__(self,heal):
         self.player = Player(self.screen, self.x, self.y)
-        self.healgauge=194
+        self.healgauge=heal
         self.collider=Collider(self.screen,self.player.arrows+self.player.sectors,self.badguys,self.tankers,self.abadguys, self.thealth, self.player,self.healgauge)
         self.wl=WL(self.screen,self.exitcode)
         self.timer=Timer(self.screen,self.count)
@@ -128,13 +134,13 @@ class Screen:
             else:
                 abad.startmove(270 - b)
 
-    def Start(self,se,what):
+    def Start(self,cl,what):
         self.badguys=[]
         self.player.arrows=[]
         self.player.sectors=[]
         self.abadguys=[]
-        msg=se.recv_msg
-        scwhat=what
+        msg=cl.recv_msg
+        scwhat = what
         self.timer.timer()
         if msg[1]!=0:
             self.badtimer = round(60 / msg[1])
@@ -154,11 +160,10 @@ class Screen:
                     self.timer.exidcode=0
                     exit(0)
             pygame.display.update() #업데이트
-            game.Drow_background(self.bY)
-            scwhat[len(scwhat)-1] = self.healgauge
-            se.sendStatus(scwhat)
-            self.yourheal=se.recv_msg
-
+            self.Drow_background(self.bY)
+            scwhat[len(scwhat)-1]=self.healgauge
+            cl.sendStatus(scwhat)
+            self.yourheal = cl.recv_msg
 
             self.bY += self.bYplus
             if self.bY>=1000:
@@ -179,8 +184,8 @@ class Screen:
                         abadguy = Abadguy(self.screen, 0, 900, 3, x * 10, 0, 345)
                         self.abadguys.append(abadguy)
                     self.startcheck=False
-                game.StartAbadmove(self.abadguys)
-                game.StartPrint(self.timer.count,self.rsX,self.alpha)
+                self.StartAbadmove(self.abadguys)
+                self.StartPrint(self.timer.count,self.rsX,self.alpha)
                 if self.timer.count<=61:
                     self.rsX += 4
                     self.alpha -= 6
@@ -194,13 +199,14 @@ class Screen:
                         self.collider.backup.remove(Bu)
                 if self.player.left <= 740:
                     self.playercheck = True
+
                 if self.playercheck == False:
                     self.player.left -= 2
                 elif self.playercheck == True and 800 > self.player.left:
                     self.player.left += 1
+
             else :
                 self.player.Start = False
-
                 self.timer.printf()  # 타이머 그리기
                 self.collider.collide()  # 충돌 함수
                 self.player.collidercheck=self.collider.playercheck
@@ -208,12 +214,15 @@ class Screen:
                 self.collider.abadguys=self.abadguys
                 self.collider.arrows = self.player.arrows
                 self.healgauge = self.collider.heallgauge
+                self.buHeal=self.collider.heallgauge
                 if self.collider.playercheck==False:
                     self.collidercheck=True
-                game.Move(self.badguys, self.tankers, self.abadguys)
+                self.Move(self.badguys, self.tankers, self.abadguys)
                 menu=Menu(self.screen,self.player.menuX)
                 menu.drow()
                 pygame.display.update()
+
+
 
                 if self.badtimer == 0:
                     for x in range(0, 10):
@@ -239,8 +248,9 @@ class Screen:
                         self.acheck = False
                 self.one_count = self.timer.count  # 타이머의 count와 같은 one_count
                 if self.yourheal[len(self.yourheal)-1] <= 0:  # one_count가 0보다 이하일 때
-                    self.exitcode = 1
+                    self.exitcode = 1  # wl의 exitcode를 1로 바꿈
                     break
+
                 if self.healgauge < 0:
                     break
             if self.timer.count<=0:
@@ -253,21 +263,28 @@ class Screen:
                         pygame.quit()
                         exit(0)
                 scwhat[len(scwhat) - 1] = self.healgauge
-                se.sendStatus(scwhat)
+                scwhat[0] = 0
+                cl.sendStatus(scwhat)
                 self.wl.printf(self.exitcode)  # win or lose 출력
                 x=self.collider.colltext(self.wl.regame)
                 if x==0:
-                    se.sendStatus([0])
+                    cl.sendStatus([0])
+                    self.regame=True
                     return
 
     def Starting(self):
-        se=Server()
+        cl=Server()
+        self.buHeal=194
         while True:
-            se.sendStatus([0])
-            self.screen2.Start(se)#스크린2 실행
-            game = Screen()
-            game.Start(se,self.screen2.what)#스크린1 실행
+            cl.sendStatus([0])
+            self.screen2.Start(cl)#스크린2 실행
+            game = Screen(self.buHeal)
+            game.Start(cl,self.screen2.what)#스크린1 실행
+            self.buHeal = game.healgauge
+            if game.regame==True:
+                self.buHeal=194
+                game.regame=False
 
-
-game = Screen()
-game.Starting()            #실행부
+if __name__ == '__main__':
+    game = Screen(0)
+    game.Starting()            #실행부
