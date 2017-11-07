@@ -11,6 +11,7 @@ from Timer import Timer
 from Screen2 import Screen2
 from Menu import Menu
 from Server import Server
+from FixedMob import FixedMob
 from Bullet import Bullet
 
 class Screen:
@@ -23,6 +24,7 @@ class Screen:
     badguys=[]
     tankers=[]
     abadguys=[]
+    fixedMob = []
     thealth = None
     badguy=None
     abadguy=None
@@ -68,7 +70,7 @@ class Screen:
     def __init__(self,heal):
         self.player = Player(self.screen, self.x, self.y)
         self.healgauge=heal
-        self.collider=Collider(self.screen,self.player.arrows+self.player.sectors,self.badguys,self.tankers,self.abadguys, self.thealth, self.player,self.healgauge)
+        self.collider=Collider(self.screen,self.player.arrows+self.player.sectors,self.badguys,self.tankers,self.abadguys,self.fixedMob, self.thealth, self.player,self.healgauge)
         self.wl=WL(self.screen,self.exitcode)
         self.timer=Timer(self.screen,self.count)
         self.screen2=Screen2(self.screen,self.width,self.height)
@@ -79,7 +81,7 @@ class Screen:
         if bY>1:
             self.screen.blit(self.background,(0,bY-1000))
 
-    def Move(self,badguys,tankers, abadguys):
+    def Move(self,badguys,tankers, abadguys,fixed):
         for badguy in badguys:  # 몹의 객체만큼
             if badguy.time==0:
                 badguy.move()  # 몹 이동 함수
@@ -89,6 +91,8 @@ class Screen:
             tanker.move()  # 탱커 무브
         for abadguy in abadguys:    #원거리 만큼
             abadguy.move()  #원거리 무브
+        for fixed in fixed:
+            fixed.move(self.player)
         pygame.display.update()
 
     def StartPrint(self,timer,rsX ,alpha):
@@ -138,6 +142,7 @@ class Screen:
         self.player.arrows=[]
         self.player.sectors=[]
         self.abadguys=[]
+        self.fixedMob = []
         msg=cl.recv_msg
         scwhat = what
         self.timer.timer()
@@ -211,12 +216,13 @@ class Screen:
                 self.player.collidercheck=self.collider.playercheck
                 self.collider.badguys = self.badguys
                 self.collider.abadguys=self.abadguys
+                self.collider.fixedmob = self.fixedMob
                 self.collider.arrows = self.player.arrows
                 self.healgauge = self.collider.heallgauge
                 self.buHeal=self.collider.heallgauge
                 if self.collider.playercheck==False:
                     self.collidercheck=True
-                self.Move(self.badguys, self.tankers, self.abadguys)
+                self.Move(self.badguys, self.tankers, self.abadguys,self.fixedMob)
                 menu=Menu(self.screen,self.player.menuX)
                 mobtime=self.timer.mobtime
                 if mobtime==10:
@@ -224,6 +230,18 @@ class Screen:
                         self.tcheck = True
                     if 1 <= self.amax:
                         self.acheck = True
+                    if len(self.fixedMob) == 1:
+                        if 0 == self.fixedMob[0].top:
+                            fixed = FixedMob(self.screen, 650,  200, 0)
+                            self.fixedMob.append(fixed)
+                        else:
+                            fixed = FixedMob(self.screen, 50,  200, 0)
+                            self.fixedMob.append(fixed)
+                    elif len(self.fixedMob) == 0:
+                        fixed = FixedMob(self.screen, 650,200, 0)
+                        self.fixedMob.append(fixed)
+                        fixed = FixedMob(self.screen, 50,250, 0)
+                        self.fixedMob.append(fixed)
                     self.timer.mobtime=0
                 menu.drow()
                 pygame.display.update()

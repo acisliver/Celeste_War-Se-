@@ -9,7 +9,7 @@ class Timer:
     max=0
     count=0
     exidcode=1
-    mobtime=0
+    mobtime=10
 
     def __init__(self,screen,count):
         self.screen=screen
