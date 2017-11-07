@@ -13,7 +13,6 @@ from Menu import Menu
 from Server import Server
 from Bullet import Bullet
 
-
 class Screen:
     width=700
     height =900
@@ -64,7 +63,7 @@ class Screen:
     screen = pygame.display.set_mode((width, height))       #화면 해상도
     bg_columns = background.get_width()                     #화면 너비 불러오기
     bg_rows = background.get_height()                       #화면 높이 불러오기
-    pygame.display.set_caption("Celeste_War")
+    pygame.display.set_caption("서버")
 
     def __init__(self,heal):
         self.player = Player(self.screen, self.x, self.y)
@@ -219,13 +218,20 @@ class Screen:
                     self.collidercheck=True
                 self.Move(self.badguys, self.tankers, self.abadguys)
                 menu=Menu(self.screen,self.player.menuX)
+                mobtime=self.timer.mobtime
+                if mobtime==10:
+                    if 1 <= self.tmax:
+                        self.tcheck = True
+                    if 1 <= self.amax:
+                        self.acheck = True
+                    self.timer.mobtime=0
                 menu.drow()
                 pygame.display.update()
 
 
 
                 if self.badtimer == 0:
-                    for x in range(0, 10):
+                    for x in range(0, 6):
                         badguy = Badguy(self.screen,
                                         random.randint(50, self.width - 50), 0, self.bYplus-5, random.randint(0,20), 0)  # 위치랜덤의 속도8인 몹 객체 생성
                         self.badguys.append(badguy)  # 리스트에 추가
@@ -243,7 +249,7 @@ class Screen:
                         self.tcheck = False
                 if self.acheck == True:
                     for x in range(0, self.amax):
-                        abadguy = Abadguy(self.screen, random.randint(50, self.width - 50), 0, 3, random.randint(0,7), -1,0)
+                        abadguy = Abadguy(self.screen, random.randint(50, self.width - 50), 0, 3, random.randint(0,100), -1,0)
                         self.abadguys.append(abadguy)
                         self.acheck = False
                 self.one_count = self.timer.count  # 타이머의 count와 같은 one_count
