@@ -232,15 +232,15 @@ class Screen:
                         self.acheck = True
                     if len(self.fixedMob) == 1:
                         if 0 == self.fixedMob[0].top:
-                            fixed = FixedMob(self.screen, 650,  200, 0)
+                            fixed = FixedMob(self.screen, 650,  200)
                             self.fixedMob.append(fixed)
                         else:
-                            fixed = FixedMob(self.screen, 50,  200, 0)
+                            fixed = FixedMob(self.screen, 50,  200)
                             self.fixedMob.append(fixed)
                     elif len(self.fixedMob) == 0:
-                        fixed = FixedMob(self.screen, 650,200, 0)
+                        fixed = FixedMob(self.screen, 650,200)
                         self.fixedMob.append(fixed)
-                        fixed = FixedMob(self.screen, 50,250, 0)
+                        fixed = FixedMob(self.screen, 50,250)
                         self.fixedMob.append(fixed)
                     self.timer.mobtime=0
                 menu.drow()

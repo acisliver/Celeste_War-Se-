@@ -1,6 +1,6 @@
 import socket
 
-HOST = '218.149.168.37' #바꿔야할부분
+HOST = '172.30.1.59' #바꿔야할부분
 PORT = 4040
 conn = None
 
