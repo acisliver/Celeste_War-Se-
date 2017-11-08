@@ -109,7 +109,7 @@ class Collider:
                     if fixed.heall == 0:
                         fixed.num = 0
                         fixed.time=1
-                        print(fixed.time)
+
                         self.backup.append(fixed)
                         self.fixedmob.remove(fixed)
                         if arrow.name == "Laser":

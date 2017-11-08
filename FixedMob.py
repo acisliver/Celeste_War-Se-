@@ -21,7 +21,7 @@ class FixedMob(pygame.Rect):
         self.screen = screen
         self.time=time
         self.num = 0
-        self.heall=2
+        self.heall=3
         self.num2=0
 
     def move(self,player):             #원거리몹 움직임 함수
