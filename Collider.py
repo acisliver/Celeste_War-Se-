@@ -137,15 +137,15 @@ class Collider:
                         self.heallgauge -= int(194 / 5)
                         self.heal = Healbar(self.screen, self.heallgauge)
                         self.playercheck = False
-        for fixed in self.fixedmob:
-            for bullet in fixed.bullets:
-                if self.collplayer.colliderect(bullet):
-                    fixed.bullets.remove(bullet)
-                    if self.playercheck == True:
-                        self.num+=1
-                        self.heallgauge -= int(194 / 5)
-                        self.heal = Healbar(self.screen, self.heallgauge)
-                        self.playercheck = False
+        for fixed in self.collplayer.fixedbullet:
+            if self.collplayer.colliderect(fixed):
+                self.collplayer.fixedbullet.remove(fixed)
+                if self.playercheck == True:
+                    self.num += 1
+                    self.heallgauge -= int(194 / 5)
+                    self.heal = Healbar(self.screen, self.heallgauge)
+                    self.playercheck = False
+
 
         if self.playtimer>0 and self.playercheck==False:
             self.playtimer-=1

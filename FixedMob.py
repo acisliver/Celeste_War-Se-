@@ -36,11 +36,11 @@ class FixedMob(pygame.Rect):
             self.num=1
         elif self.time==20:
             self.num=2
-        for bullet in self.bullets:
-            bullet.move()
+
         self.screen.blit(self.fixedlist[self.num], (self.top,self.left))
 
     def shot(self,player):                 #화살생성함수
         fixedblullet = FixedBullet(self.screen, self.top+32.5, self.left+32.5, 8,
                                    math.atan2((self.left+32.5) - (player.left+132.5), (self.top+32.5) - (player.top+57.5)))
+        player.fixedbullet.append(fixedblullet)
         self.bullets.append(fixedblullet)

@@ -8,7 +8,8 @@ class Arrow(pygame.Rect):
 
     def __init__(self,screen,x,y,speed):
         super().__init__(self.arrow.get_rect())     #상위 클래스의 함수(rect)를 사용하기 위해 super()사용
-        self.top=x
+        self.height+=10
+        self.top=x-5
         self.left=y
         self.speed=speed
         self.screen=screen
@@ -16,4 +17,4 @@ class Arrow(pygame.Rect):
 
     def move(self):         #화살의 움직임 함수
         self.left -= self.speed
-        self.screen.blit(self.arrow,(self.top+25,self.left))
+        self.screen.blit(self.arrow,(self.top+30,self.left))

@@ -8,7 +8,7 @@ send_queues = {}
 lock = threading.Lock()
 
 class Server():
-    HOST = '172.30.1.59' #이거 설정해두면 이 IP가진것만 클라이언트로 받을 수 있다
+    HOST = '59.8.110.138' #이거 설정해두면 이 IP가진것만 클라이언트로 받을 수 있다
     PORT = 4040   #정수형으로 아무거나
     send_msg = ''
     recv_msg = ''
