@@ -106,26 +106,24 @@ class Collider:
                         self.iscolided = True
             for fixed in self.fixedmob:  # 몹의 개수 만큼 실행
                 if arrow.colliderect(fixed):
+                    if arrow.name == "Laser":
+                        if arrow.chek == True and fixed.num == 1:
+                            pass
+                        else:
+                            fixed.num = 1
+                            arrow.chek = True
+                            fixed.heall -= 1
+                    else:
+                        fixed.heall -= 1
+                        self.iscolided = True
                     if fixed.heall == 0:
                         fixed.num = 0
                         fixed.time=1
-
                         self.backup.append(fixed)
                         self.fixedmob.remove(fixed)
                         if arrow.name == "Laser":
                             pass
                         else:
-                            self.iscolided = True
-                    else:
-                        if arrow.name == "Laser":
-                            if arrow.chek==True and fixed.num==1:
-                                pass
-                            else:
-                                fixed.num=1
-                                arrow.chek=True
-                                fixed.heall -=1
-                        else:
-                            fixed.heall -= 1
                             self.iscolided = True
                 else:
                     fixed.num = 0

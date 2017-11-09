@@ -153,10 +153,7 @@ class Screen:
         self.butimer = self.badtimer
         self.tmax = msg[2]
         self.amax = msg[3]
-        if 1<=self.tmax:
-            self.tcheck=True
-        if 1<=self.amax:
-            self.acheck=True
+
         while True:
             for event in pygame.event.get():    #종료 이벤트
                 if event.type == pygame.QUIT:
